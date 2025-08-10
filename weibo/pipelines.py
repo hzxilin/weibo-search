@@ -20,10 +20,13 @@ settings = get_project_settings()
 
 class CsvPipeline(object):
     def process_item(self, item, spider):
-        base_dir = '结果文件' + os.sep + item['keyword']
+        created_at = item['weibo'].get('created_at', '')
+        date_str = created_at.split()[0]
+        year_str = date_str.split('-')[0]
+        base_dir = '结果文件' + os.sep + item['keyword'] + os.sep + year_str
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
-        file_path = base_dir + os.sep + item['keyword'] + '.csv'
+        file_path = base_dir + os.sep + date_str + '.csv'
         if not os.path.isfile(file_path):
             is_first_write = 1
         else:
@@ -36,7 +39,7 @@ class CsvPipeline(object):
                     header = [
                         'id', 'bid', 'user_id', '用户昵称', '微博正文', '头条文章url',
                         '发布位置', '艾特用户', '话题', '转发数', '评论数', '点赞数', '发布时间',
-                        '发布工具', '微博图片url', '微博视频url', 'retweet_id', 'ip', 'user_authentication',
+                        '发布工具', 'retweet_id', 'ip', 'user_authentication',
                         '会员类型', '会员等级'
                     ]
                     writer.writerow(header)
@@ -56,8 +59,6 @@ class CsvPipeline(object):
                     item['weibo'].get('attitudes_count', ''),
                     item['weibo'].get('created_at', ''),
                     item['weibo'].get('source', ''),
-                    ','.join(item['weibo'].get('pics', [])),
-                    item['weibo'].get('video_url', ''),
                     item['weibo'].get('retweet_id', ''),
                     item['weibo'].get('ip', ''),
                     item['weibo'].get('user_authentication', ''),

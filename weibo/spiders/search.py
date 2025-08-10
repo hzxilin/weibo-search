@@ -33,9 +33,12 @@ class SearchSpider(scrapy.Spider):
     contain_type = util.convert_contain_type(settings.get('CONTAIN_TYPE'))
     regions = util.get_regions(settings.get('REGION'))
     base_url = 'https://s.weibo.com'
+
     start_date = settings.get('START_DATE',
                               datetime.now().strftime('%Y-%m-%d'))
+    
     end_date = settings.get('END_DATE', datetime.now().strftime('%Y-%m-%d'))
+    
     if util.str_to_time(start_date) > util.str_to_time(end_date):
         sys.exit('settings.py配置错误，START_DATE值应早于或等于END_DATE值，请重新配置settings.py')
     further_threshold = settings.get('FURTHER_THRESHOLD', 46)
@@ -530,12 +533,7 @@ class SearchSpider(scrapy.Spider):
                     video_url = re.findall(r'src:\'(.*?)\'', is_exist_video)[0]
                     video_url = video_url.replace('&amp;', '&')
                     video_url = 'http:' + video_url
-                if not retweet_sel:
-                    weibo['pics'] = pics
-                    weibo['video_url'] = video_url
-                else:
-                    weibo['pics'] = ''
-                    weibo['video_url'] = ''
+
                 weibo['retweet_id'] = ''
                 if retweet_sel and retweet_sel[0].xpath(
                         './/div[@node-type="feed_list_forwardContent"]/a[1]'):
