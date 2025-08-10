@@ -23,7 +23,7 @@ class CsvPipeline(object):
         created_at = item['weibo'].get('created_at', '')
         date_str = created_at.split()[0]
         year_str = date_str.split('-')[0]
-        base_dir = '结果文件' + os.sep + item['keyword'] + os.sep + year_str
+        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + year_str
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         file_path = base_dir + os.sep + date_str + '.csv'
@@ -72,7 +72,7 @@ class SQLitePipeline(object):
         try:
             import sqlite3
             # 在结果文件目录下创建SQLite数据库
-            base_dir = '结果文件'
+            base_dir = 'RESULTS'
             if not os.path.isdir(base_dir):
                 os.makedirs(base_dir)
             db_name = settings.get('SQLITE_DATABASE', 'weibo.db')
@@ -150,7 +150,7 @@ class MyImagesPipeline(ImagesPipeline):
         image_url = request.url
         item = request.meta['item']
         sign = request.meta['sign']
-        base_dir = '结果文件' + os.sep + item['keyword'] + os.sep + 'images'
+        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + 'images'
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         image_suffix = image_url[image_url.rfind('.'):]
@@ -167,7 +167,7 @@ class MyVideoPipeline(FilesPipeline):
 
     def file_path(self, request, response=None, info=None):
         item = request.meta['item']
-        base_dir = '结果文件' + os.sep + item['keyword'] + os.sep + 'videos'
+        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + 'videos'
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         file_path = base_dir + os.sep + item['weibo']['id'] + '.mp4'
