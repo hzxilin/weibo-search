@@ -23,7 +23,8 @@ class CsvPipeline(object):
         created_at = item['weibo'].get('created_at', '')
         date_str = created_at.split()[0]
         year_str = date_str.split('-')[0]
-        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + year_str
+        month_str = date_str.split('-')[1]
+        base_dir = 'RESULTS' + os.sep + 'Russia' + os.sep + year_str + os.sep + month_str
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         file_path = base_dir + os.sep + date_str + '.csv'
@@ -150,7 +151,7 @@ class MyImagesPipeline(ImagesPipeline):
         image_url = request.url
         item = request.meta['item']
         sign = request.meta['sign']
-        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + 'images'
+        base_dir = 'RESULTS' + os.sep + 'Russia' + os.sep + 'images'
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         image_suffix = image_url[image_url.rfind('.'):]
@@ -167,7 +168,7 @@ class MyVideoPipeline(FilesPipeline):
 
     def file_path(self, request, response=None, info=None):
         item = request.meta['item']
-        base_dir = 'RESULTS' + os.sep + item['keyword'] + os.sep + 'videos'
+        base_dir = 'RESULTS' + os.sep + 'Russia' + os.sep + 'videos'
         if not os.path.isdir(base_dir):
             os.makedirs(base_dir)
         file_path = base_dir + os.sep + item['weibo']['id'] + '.mp4'
