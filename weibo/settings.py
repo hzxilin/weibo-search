@@ -12,7 +12,6 @@ COOKIES_ENABLED = False
 TELNETCONSOLE_ENABLED = False
 LOG_LEVEL = 'ERROR'
 # 访问完一个页面再访问下一个时需要等待的时间，默认为10秒
-DOWNLOAD_DELAY = 0.1
 DEFAULT_REQUEST_HEADERS = {
     'Accept':
     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -60,7 +59,9 @@ FILES_STORE = './'
 # MYSQL_DATABASE = 'weibo'
 # 配置SQLite数据库
 # SQLITE_DATABASE = 'weibo.db'
+DOWNLOAD_DELAY = 0.1 + random() * 0.1
 AUTOTHROTTLE_ENABLED = True
-AUTOTHROTTLE_TARGET_CONCURRENCY=4.0
+AUTOTHROTTLE_TARGET_CONCURRENCY=6.0
 AUTOTHROTTLE_START_DELAY=0.25
+
 
