@@ -63,11 +63,3 @@ DOWNLOAD_DELAY = 0
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_TARGET_CONCURRENCY=3.0
 AUTOTHROTTLE_START_DELAY=0.5
-THORDATA_PROXY = "http://td-customer-FLywhgc9r5hu:qOjtifonjak1@b8sdoy3u.pr.thordata.net:9999"
-DOWNLOADER_MIDDLEWARES = {
-    # Add our proxy middleware
-    "weibo.middlewares.ProxyMiddleware": 100,
-    # Ensure Scrapy's HttpProxyMiddleware is active too
-    "scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware": 110,
-}
-
