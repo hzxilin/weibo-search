@@ -64,20 +64,3 @@ AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_TARGET_CONCURRENCY=3.0
 AUTOTHROTTLE_START_DELAY=0.5
 
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-}
-
-HTTP_PROXY = "FLywhgc9r5hu:qOjtifonjak1@b8sdoy3u.pr.thordata.net:9999"
-
-# Use a downloader middleware to attach proxy to every request
-class ProxyMiddleware:
-    def process_request(self, request, spider):
-        request.meta['proxy'] = HTTP_PROXY
-
-DOWNLOADER_MIDDLEWARES.update({
-    '__main__.ProxyMiddleware': 100,  # replace __main__ with your module name
-})
-
-
