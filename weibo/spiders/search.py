@@ -17,32 +17,7 @@ from weibo.items import WeiboItem
 class SearchSpider(scrapy.Spider):
     name = 'search'
     allowed_domains = ['weibo.com']
-    settings = get_project_settings()
-    keyword_list = settings.get('KEYWORD_LIST')
-    if not isinstance(keyword_list, list):
-        if not os.path.isabs(keyword_list):
-            keyword_list = os.getcwd() + os.sep + keyword_list
-        if not os.path.isfile(keyword_list):
-            sys.exit('不存在%s文件' % keyword_list)
-        keyword_list = util.get_keyword_list(keyword_list)
-
-    for i, keyword in enumerate(keyword_list):
-        if len(keyword) > 2 and keyword[0] == '#' and keyword[-1] == '#':
-            keyword_list[i] = '%23' + keyword[1:-1] + '%23'
-    weibo_type = util.convert_weibo_type(settings.get('WEIBO_TYPE'))
-    contain_type = util.convert_contain_type(settings.get('CONTAIN_TYPE'))
-    regions = util.get_regions(settings.get('REGION'))
     base_url = 'https://s.weibo.com'
-
-    start_date = settings.get('START_DATE',
-                              datetime.now().strftime('%Y-%m-%d'))
-    
-    end_date = settings.get('END_DATE', datetime.now().strftime('%Y-%m-%d'))
-    
-    if util.str_to_time(start_date) > util.str_to_time(end_date):
-        sys.exit('settings.py配置错误，START_DATE值应早于或等于END_DATE值，请重新配置settings.py')
-    further_threshold = settings.get('FURTHER_THRESHOLD', 46)
-    limit_result = settings.get('LIMIT_RESULT', 0)
     result_count = 0
     mongo_error = False
     pymongo_error = False
@@ -50,6 +25,26 @@ class SearchSpider(scrapy.Spider):
     pymysql_error = False
     sqlite3_error = False
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Read from runtime Scrapy setting
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = cls(*args, **kwargs)
+        spider._set_crawler(crawler)  # standard Scrapy init
+        # Read once from settings and store as plain attributes
+        s = crawler.settings
+        spider.further_threshold = s.getint("FURTHER_THRESHOLD", 46)
+        spider.limit_result = s.getint("LIMIT_RESULT", 0)
+        spider.keyword_list = s.get("KEYWORD_LIST", [])
+        spider.weibo_type = util.convert_weibo_type(s.get("WEIBO_TYPE", ""))
+        spider.contain_type = util.convert_contain_type(s.get("CONTAIN_TYPE", ""))
+        spider.regions = util.get_regions(s.get("REGION", ""))
+        spider.start_date = s.get("START_DATE", datetime.now().strftime("%Y-%m-%d"))
+        spider.end_date = s.get("END_DATE", datetime.now().strftime("%Y-%m-%d"))
+        return spider
+    
     def check_limit(self):
         """检查是否达到爬取结果数量限制"""
         if self.limit_result > 0 and self.result_count > self.limit_result:
@@ -58,6 +53,7 @@ class SearchSpider(scrapy.Spider):
         return False
 
     def start_requests(self):
+        print(f"START_DATE: {self.start_date}, END_DATE: {self.end_date}")
         start_date = datetime.strptime(self.start_date, '%Y-%m-%d')
         end_date = datetime.strptime(self.end_date,
                                      '%Y-%m-%d') + timedelta(days=1)

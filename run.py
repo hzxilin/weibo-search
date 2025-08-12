@@ -30,7 +30,8 @@ def main():
         start_date = date(y0, m0, 1)
         end_date = date(y1, m1, 1)
         print(f">>> Running for {cur}")
-        cmd = ["scrapy", "crawl", "search", "-s", f"START_DATE={start_date}", "-s", f"END_DATE={end_date}"]
+        cmd = ["scrapy", "crawl", "search", "-a", f"START_DATE={start_date}", "-a", f"END_DATE={end_date}"]
+        print (f">>> Command: {' '.join(cmd)}")
         subprocess.run(cmd, check=True)
 
         if cur < ym1:
