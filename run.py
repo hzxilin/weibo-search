@@ -1,6 +1,6 @@
 import argparse, random, subprocess, time
 from datetime import date, timedelta
-
+import calendar
 
 def month(ym_start, ym_end):
     """Yield YYYY-MM strings from start to end inclusive."""
@@ -25,12 +25,11 @@ def main():
     ym1 = args.ym1
 
     for cur in month(ym0, ym1):
-        y0, m0 = map(int, ym0.split("-"))
-        y1, m1 = map(int, ym1.split("-"))
-        start_date = date(y0, m0, 1)
-        end_date = date(y1, m1, 1)
+        y, m = map(int, cur.split("-"))
+        start_date = date(y, m, 1)
+        end_date = date(y, m, calendar.monthrange(y, m)[1])
         print(f">>> Running for {cur}")
-        cmd = ["scrapy", "crawl", "search", "-a", f"START_DATE={start_date}", "-a", f"END_DATE={end_date}"]
+        cmd = ["scrapy", "crawl", "search", "-s", f"START_DATE={start_date}", "-s", f"END_DATE={end_date}"]
         print (f">>> Command: {' '.join(cmd)}")
         subprocess.run(cmd, check=True)
 
