@@ -6,7 +6,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+import os
 
 class WeiboSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -101,3 +101,15 @@ class WeiboDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class SimpleProxyMiddleware:
+    def __init__(self, proxy_url: str | None):
+        self.proxy_url = proxy_url
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(os.getenv("THORDATA_PROXY"))
+
+    def process_request(self, request, spider):
+        if self.proxy_url:
+            request.meta["proxy"] = self.proxy_url

@@ -64,3 +64,8 @@ AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_TARGET_CONCURRENCY=3.0
 AUTOTHROTTLE_START_DELAY=0.5
 
+DOWNLOADER_MIDDLEWARES = {
+    "scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware": 110,
+    "weibo.middlewares.SimpleProxyMiddleware": 100,  # <-- replace 'weibo' if your package name is different
+}
+
