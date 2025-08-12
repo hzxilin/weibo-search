@@ -16,7 +16,7 @@ DEFAULT_REQUEST_HEADERS = {
     'Accept':
     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-US;q=0.7',
-    'cookie': 'SCF=ApAwNkyga3XvpUY24zpDhROd6_w5-0Ar8fMgrxIuir2lAf4toHlT7PWYOoYpWv93UqOZ7LDe0xdSM6NUVdB-miY.; SUB=_2A25FkmweDeRhGeNO6VQS-SzFyTmIHXVm7uHWrDV6PUJbktANLUfBkW1NTxphzyz0ZF_vAsocydhhaFnTPHDcTb_e; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WF-WMj5JVPnIy3WwP2KOUD65NHD95Qfehzce0.E1KzfWs4DqcjMi--NiK.Xi-2Ri--ciKnRi-zN9N.4Sg_7dcQce7tt; SSOLoginState=1754668110; ALF=1757260110; _T_WM=fd36f00a938787ec6268c5af48cef6f9'
+    'cookie': 'SCF=AmmE2M81OTMaoODsxVOeRn6PTr8gTzvJPnDWGzRa0jNtX4vAdRktceVo1nBZtM7j5pHfmo0ArJNyX0UzI9ym-A4.; SINAGLOBAL=45020488451.77686.1748983512044; ULV=1754018463975:8:2:2:8229827359957.304.1754018463952:1753985772932; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9W53dkTRZo1x_2cqjOTZRS-35JpX5KMhUgL.FoM0S0-XSo5feKe2dJLoIEXLxKMLBKnL1h5LxK.LBK-LB-BLxKnLBK-LB.qLxKqL1-eLBKnLxKqL1-eLBKnt; XSRF-TOKEN=PnE1kq0sGWOJrrZIPvQitS-2; ALF=1757578462; SUB=_2A25FnoeODeRhGeFN7FcV9i7Jyj-IHXVm1YVGrDV8PUJbkNAbLWPHkW1NQ82zFEBQnAuCQixcDGiDBCR3vfGEXHrK; WBPSESS=bE-DSIeJx2-KcY3Ei0BWA5lA6L9uB41QpkuEeZQI-V_wmnJPD4YjSmYwQ8ViPsfa9WkKUDKRYkl4FeKn8sv5bDkqNA0eShbnD9P7sTeZBxPQMR-0qV54rr4EQjTpOrQfMqVDK-aloo24CKxycUOjvg=='
 }
 ITEM_PIPELINES = {
     'weibo.pipelines.DuplicatesPipeline': 300,
@@ -63,5 +63,21 @@ DOWNLOAD_DELAY = 0
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_TARGET_CONCURRENCY=3.0
 AUTOTHROTTLE_START_DELAY=0.5
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+}
+
+HTTP_PROXY = "FLywhgc9r5hu:qOjtifonjak1@b8sdoy3u.pr.thordata.net:9999"
+
+# Use a downloader middleware to attach proxy to every request
+class ProxyMiddleware:
+    def process_request(self, request, spider):
+        request.meta['proxy'] = HTTP_PROXY
+
+DOWNLOADER_MIDDLEWARES.update({
+    '__main__.ProxyMiddleware': 100,  # replace __main__ with your module name
+})
 
 
