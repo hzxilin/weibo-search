@@ -28,15 +28,17 @@ def main():
         y, m = map(int, cur.split("-"))
         start_date = date(y, m, 1)
         end_date = date(y, m, calendar.monthrange(y, m)[1])
-        print(f">>> Running for {cur}")
-        cmd = ["scrapy", "crawl", "search", "-s", f"START_DATE={start_date}", "-s", f"END_DATE={end_date}"]
-        print (f">>> Command: {' '.join(cmd)}")
-        subprocess.run(cmd, check=True)
+        for i in date(start_date, end_date):
+            print(f">>> Running for {i}")
+            cmd = ["scrapy", "crawl", "search", "-s", f"START_DATE={i}", "-s", f"END_DATE={i}"]
+            print (f">>> Command: {' '.join(cmd)}")
+            subprocess.run(cmd, check=True)
 
-        if cur < ym1:
-            slp = random.randint(600, 1200)
-            print(f">>> Sleeping {slp}s...")
-            time.sleep(slp)
+            if i < end_date:
+                slp = random.randint(120, 180) 
+                print(f">>> Sleeping in between dates {slp}s...")
+                time.sleep(slp)
+
 
 if __name__ == "__main__":
     main()
