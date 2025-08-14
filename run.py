@@ -34,7 +34,7 @@ def main():
         subprocess.run(cmd, check=True)
 
         if cur < ym1:
-            slp = random.randint(60, 120)
+            slp = random.randint(600, 1200)
             print(f">>> Sleeping {slp}s...")
             time.sleep(slp)
 
